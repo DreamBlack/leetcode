@@ -2,14 +2,13 @@ package linearlist;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class ThreeSum {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int[] nums = { -1,0,1,2,-1,-4 };
+		int[] nums = { -1, 0, 1, 2, -1, -4 };
 		List<List<Integer>> ret = threeSumLastVersion(nums);
 		for (int i = 0; i < ret.size(); i++) {
 			System.out.println(ret.get(i).get(0) + "," + ret.get(i).get(1) + "," + ret.get(i).get(2));
@@ -74,37 +73,35 @@ public class ThreeSum {
 		 * 此外为了防止出现重复，显然应该从前往后找，不能再看当前元素之前的元素，且不需要对和当前元素值相同的元素进行二次处理
 		 */
 		quickSort(nums, 0, nums.length - 1);
-		for(int i=0;i<nums.length;i++) {//这个循环里要剔除相同的nums[i]，以防止重复
-			int left=i+1,right=nums.length-1;
-			int sum=0-nums[i];
-			//对于值相同的元素只需处理一次，因为第一次处理的元素必然会包含了所有满足条件的三元素，而4Sum此法仍不可
-			if(i==0||(i-1>=0&&nums[i]!=nums[i-1])) {
-				while(left<right) {//这个循环里要剔除元素和相同的两个元素
-					if(nums[left]+nums[right]==sum) {
-						//找到满足的一对
+		for (int i = 0; i < nums.length; i++) {// 这个循环里要剔除相同的nums[i]，以防止重复
+			int left = i + 1, right = nums.length - 1;
+			int sum = 0 - nums[i];
+			// 对于值相同的元素只需处理一次，因为第一次处理的元素必然会包含了所有满足条件的三元素，而4Sum此法仍不可
+			if (i == 0 || (i - 1 >= 0 && nums[i] != nums[i - 1])) {
+				while (left < right) {// 这个循环里要剔除元素和相同的两个元素
+					if (nums[left] + nums[right] == sum) {
+						// 找到满足的一对
 						ret.add(Arrays.asList(nums[i], nums[left], nums[right]));
-						while(left+1<nums.length&&nums[left+1]==nums[left]&&left-1<nums.length) 
-						{//时刻防止越界
+						while (left + 1 < nums.length && nums[left + 1] == nums[left] && left - 1 < nums.length) {// 时刻防止越界
 							left++;
 						}
 						left++;
-						while(right-1>=0&&nums[right-1]==nums[right]&&right-1>i) 
-						{
+						while (right - 1 >= 0 && nums[right - 1] == nums[right] && right - 1 > i) {
 							right--;
 						}
-						right--;//两指针必须同时更新，且要跳过所有和Nums[left],nums[right]相同的元素以避免重复出现，但仍然的继续寻找
-						//居然忘了考虑没有相等元素的情况。。。
-					}else if(nums[left]+nums[right]<sum) {
-						//和不够大
+						right--;// 两指针必须同时更新，且要跳过所有和Nums[left],nums[right]相同的元素以避免重复出现，但仍然的继续寻找
+						// 居然忘了考虑没有相等元素的情况。。。
+					} else if (nums[left] + nums[right] < sum) {
+						// 和不够大
 						left++;
-					}else {
-						//和太大了
+					} else {
+						// 和太大了
 						right--;
 					}
-						
+
 				}
 			}
-			
+
 		}
 		return ret;
 	}
@@ -145,11 +142,11 @@ public class ThreeSum {
 			return ret;
 		quickSort(nums, 0, nums.length - 1);// 不排序没法用二分查找
 		for (int i = 0; i < nums.length; i++) {
-			
-				for (int j = i + 1; j < nums.length; j++) {
-					if (j - 1 > 0 && j - 1 < nums.length && nums[j - 1] == nums[j]) {// 防止重复的出现
 
-					} else {
+			for (int j = i + 1; j < nums.length; j++) {
+				if (j - 1 > 0 && j - 1 < nums.length && nums[j - 1] == nums[j]) {// 防止重复的出现
+
+				} else {
 					int pos = binarySearch(nums, -(nums[i] + nums[j]), (i > j) ? i + 1 : j + 1, nums.length - 1);
 					if (pos != -1 && pos != i && pos != j) {
 						List<Integer> l = new ArrayList<Integer>();
@@ -160,8 +157,8 @@ public class ThreeSum {
 					}
 
 				}
-				}
-			
+			}
+
 		}
 		return ret;
 	}
