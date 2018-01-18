@@ -4,8 +4,8 @@ public class GasStation {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int[] gas = { 2,4};
-		int[] cost = { 3,4 };
+		int[] gas = { 2, 4 };
+		int[] cost = { 3, 4 };
 		System.out.println(canCompleteCircuit(gas, cost));
 		System.out.println(canCompleteCircuitEhanced(gas, cost));
 	}
@@ -13,8 +13,7 @@ public class GasStation {
 	public static int canCompleteCircuitEhanced(int[] gas, int[] cost) {
 		// 判断循环到头老是搞不好
 		/*
-		 * 其实有一个地方可以优化
-		 * 如果从i站走都j站都是可能的，而在再从j站走到j+1站却失败了。普通解法是此时让i从i+1站再开始重新走一遍。
+		 * 其实有一个地方可以优化 如果从i站走都j站都是可能的，而在再从j站走到j+1站却失败了。普通解法是此时让i从i+1站再开始重新走一遍。
 		 * 但其实这里可以直接让i=j+1，因为从i到j的过程正total始终是大于等于0的，在走到j+1的时候total突然小于0的。
 		 * 需要明确如果路是通的，那没走过一个站只能让total不变或者增大，即total是单调不减的，i到j+1走不了的时候，i+1到j+1必然也是走不了的
 		 * 因为缺少一个i站total只会不变或者更小，仍然是经受不了到J+1站的考验的（就像字符串匹配模式那样）
@@ -27,22 +26,22 @@ public class GasStation {
 		if (gas.length <= 0) {
 			return -1;
 		}
-		int total=0;
-		int sum=0;
-		int j=-1;
-		for(int i=0;i<gas.length;i++) {
-			total+=gas[i]-cost[i];//记录总的油量，若所有加起来都小于0，肯定没有出路
-			sum+=gas[i]-cost[i];
-			if(total<0) {
-				//total为负，不可取，从下一个站点开始
-				j=i;
-				sum=0;
+		int total = 0;
+		int sum = 0;
+		int j = -1;
+		for (int i = 0; i < gas.length; i++) {
+			total += gas[i] - cost[i];// 记录总的油量，若所有加起来都小于0，肯定没有出路
+			sum += gas[i] - cost[i];
+			if (sum < 0) {
+				// total为负，所有之前的点都不可取，出发点只能在后面
+				j = i;// 记录下一次开始的加油站的前一个加油站，因为for里面i下一步会自动+1
+				sum = 0;// 不需要再循环了计算前面的
 			}
 		}
-		if(total<0) {
+		if (total < 0) {// 小于0时及时j后面的所有加起来都大于0总的来说也是不可能的
 			return -1;
-		}else {
-			return j+1;
+		} else {// total>0证明一定存在一个解
+			return j + 1;
 		}
 	}
 
