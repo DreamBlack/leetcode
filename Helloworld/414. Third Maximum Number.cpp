@@ -26,6 +26,8 @@ Both numbers with value 2 are both considered as second maximum.
 其中遇到了一些问题
     a.有多个值相等的情况，所以要在判断的时候避开等于的情况
 	b.值最小可能是-2147483648，是32位int中最小值，如果用int_32或者int_min都不想，要用64位long long 即INT64_MIN
+INT_MIN和INT32_MIN都是-2147483648
+long和long long好像一样，都是64位的
 */
 #include<vector>
 #include<map>
@@ -47,7 +49,7 @@ int thirdMax(vector<int>& nums) {
 			max3 = nums[i];
 		}
 	}
-	if (max3 == INT64_MIN) {
+	if (max3 == INT64_MIN) {//如果第三大的数刚好是-2147483648，这里就会输出max1了，所以初始化的时候要用INT64_MIN
 		return max1;
 	}
 	else
