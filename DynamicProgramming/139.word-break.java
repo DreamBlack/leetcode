@@ -88,140 +88,205 @@ import java.util.List;
 
 // @lc code=start
 class Solution {
-    boolean ret;
-    boolean[] dp;
+    // boolean ret;
+    // boolean[] dp;
 
-    public boolean wordBreak4(String s, List<String> wordDict) {
-        // 一维的完全背包
-        // 说句子能否被空格分隔成字典中的单词，反过来就是字典能否构成这个句子
-        // 就是把字典作为物品集，句子作为背包，是个完全背包问题
-        // memo[i]记录能否在第i个位置后面加空格
-        int n = s.length();
-        boolean[] memo = new boolean[n + 1];// 注意boolean和Boolean不一样，
-        // 这里如果用Boolean，if后面的判断就会报空指针的错误，因为new Boolean之后没有初始化访问的时候就会报错
-        memo[0] = true;
-        for (int i = 1; i <= n; i++) {
-            for (String word : wordDict) {
-                int len = word.length();
-                // 只有当word和从i开始前len个单词相同的时候，i才有可能加空格
-                if (len <= i && word.equals(s.substring(i - len, i))) {
-                    // 要么是以word结尾取memo[i-len]，要么是不以i结尾以其他在i处结尾的单词
-                    memo[i] = memo[i] || memo[i - len];
-                }
-            }
-        }
-        return memo[n];
-    }
+    // public boolean wordBreak4(String s, List<String> wordDict) {
+    // // 一维的完全背包
+    // // 说句子能否被空格分隔成字典中的单词，反过来就是字典能否构成这个句子
+    // // 就是把字典作为物品集，句子作为背包，是个完全背包问题
+    // // memo[i]记录能否在第i个位置后面加空格
+    // int n = s.length();
+    // boolean[] memo = new boolean[n + 1];// 注意boolean和Boolean不一样，
+    // // 这里如果用Boolean，if后面的判断就会报空指针的错误，因为new Boolean之后没有初始化访问的时候就会报错
+    // memo[0] = true;
+    // for (int i = 1; i <= n; i++) {
+    // for (String word : wordDict) {
+    // int len = word.length();
+    // // 只有当word和从i开始前len个单词相同的时候，i才有可能加空格
+    // if (len <= i && word.equals(s.substring(i - len, i))) {
+    // // 要么是以word结尾取memo[i-len]，要么是不以i结尾以其他在i处结尾的单词
+    // memo[i] = memo[i] || memo[i - len];
+    // }
+    // }
+    // }
+    // return memo[n];
+    // }
+
+    // public boolean wordBreak(String s, List<String> wordDict) {
+    // // 二维的完全背包
+    // int n = s.length();
+    // boolean[][] memo = new boolean[n + 1][wordDict.size() + 1];//
+    // 注意boolean和Boolean不一样，
+    // for (int j = 0; j < wordDict.size() + 1; j++) {
+    // memo[0][j] = true;
+    // }
+    // for (int i = 1; i <= n; i++) {
+    // memo[i][0] = true;
+    // for (int j = 1; j < wordDict.size() + 1; j++) {
+    // int len = wordDict.get(j - 1).length();
+    // if (len <= i && wordDict.get(j - 1).equals(s.substring(i - len, i))) {
+    // // 第一个for是在不使用第j-1个word作为最后的分割的可行性判断
+    // boolean tmp1 = false;
+    // for (int k = 0; k < wordDict.size(); k++) {
+    // if (memo[i][k + 1]) {
+    // tmp1 = true;
+    // break;
+    // }
+    // }
+    // // 第二个for是在使用第j-1个word作为最后的分割的可行性判断
+    // boolean tmp2 = false;
+    // for (int k = 0; k < wordDict.size(); k++) {
+    // if (memo[i - len][k + 1]) {
+    // tmp2 = true;
+    // break;
+    // }
+    // }
+    // memo[i][j] = tmp1 || tmp2;
+    // }
+    // }
+    // }
+    // // for(int i=1;i<=s.length();i++){
+    // // for(int j=1;j<=wordDict.size();j++){
+    // // System.out.print(memo[i][j]+" ");
+    // // }
+    // // System.out.println();
+    // // }
+
+    // // 同理最后输出的时候也要在所以wordDict之间进行可行性判断
+    // boolean ret = false;
+    // for (int k = 0; k < wordDict.size(); k++) {
+    // if (memo[s.length()][k + 1]) {
+    // ret = true;
+    // break;
+    // }
+    // }
+    // return ret;
+    // }
+
+    // public void dfs2(String s, int index, List<String> wordDict,
+    // ArrayList<Integer> st) {
+    // //这写的什么玩意儿
+    // if (index == 0) {
+    // ret = true;
+    // return;
+    // }
+
+    // boolean flag = false;
+    // for (int i = 0; i < wordDict.size(); i++) {
+    // int startindex = index - wordDict.get(i).length();
+
+    // // dp[i]为true表示此路不通，不用走了
+    // if (startindex >= 0 && dp[startindex] == false
+    // && (s.substring(startindex, index)).equals(wordDict.get(i))) {
+    // // 记录
+    // st.add(st.size(), startindex);
+    // dfs2(s, startindex, wordDict, st);
+    // flag = true;
+    // }
+    // // 一旦ret已经为true，表示已经找到了一条路，可以立即返回
+    // if (ret)
+    // return;
+    // }
+    // if (!flag) {
+    // // 表示此路不通
+    // for (int i = 0; i < st.size(); i++) {
+    // dp[st.get(i)] = true;
+    // }
+    // st.clear();
+    // }
+    // }
+
+    // public boolean wordBreak2(String s, List<String> wordDict) {
+    // // 自顶向下超时，改为自底向上
+    // dp = new boolean[s.length()];
+    // // arraylist要用Integer而不能用int
+    // ArrayList<Integer> st = new ArrayList<Integer>();
+    // dfs2(s, s.length(), wordDict, st);
+    // return ret;
+    // }
+
+    // public void dfs1(String s, int index, List<String> wordDict) {
+
+    // // dfs感觉最好不要有返回值
+    // if (index >= s.length()) {
+    // ret = true;
+    // return;
+    // }
+    // for (int i = 0; i < wordDict.size(); i++) {
+    // int endindex = wordDict.get(i).length() + index;
+    // if (endindex <= s.length() && (s.substring(index,
+    // endindex)).equals(wordDict.get(i))) {
+    // dfs1(s, endindex, wordDict);
+    // }
+    // }
+    // }
+
+    // public boolean wordBreak1(String s, List<String> wordDict) {
+    // // 自顶向下超时，而且不好保存中间结果
+    // dfs1(s, 0, wordDict);
+    // return ret;
+    // }
+
+    List<String> res;
+    int[] memo;// 为何用int类型而不用boolean类型，为的是在false的时候也能直接返回
+    // 可以节省时间，boolean只有两种状态没法表示初始化的那个
 
     public boolean wordBreak(String s, List<String> wordDict) {
-        // 二维的完全背包
-        int n = s.length();
-        boolean[][] memo = new boolean[n + 1][wordDict.size() + 1];// 注意boolean和Boolean不一样，
-        for (int j = 0; j < wordDict.size() + 1; j++) {
-            memo[0][j] = true;
+        memo = new int[s.length()];
+        return dfs(0, wordDict, s);
+    }
+
+    boolean dfs2(int i, List<String> words, String s) {
+        /*
+         * dfs超时
+         */
+        if (i == s.length()) {
+
+            return true;
         }
-        for (int i = 1; i <= n; i++) {
-            memo[i][0] = true;
-            for (int j = 1; j < wordDict.size() + 1; j++) {
-                int len = wordDict.get(j - 1).length();
-                if (len <= i && wordDict.get(j - 1).equals(s.substring(i - len, i))) {
-                    // 第一个for是在不使用第j-1个word作为最后的分割的可行性判断
-                    boolean tmp1 = false;
-                    for (int k = 0; k < wordDict.size(); k++) {
-                        if (memo[i][k + 1]) {
-                            tmp1 = true;
-                            break;
-                        }
-                    }
-                    // 第二个for是在使用第j-1个word作为最后的分割的可行性判断
-                    boolean tmp2 = false;
-                    for (int k = 0; k < wordDict.size(); k++) {
-                        if (memo[i - len][k + 1]) {
-                            tmp2 = true;
-                            break;
-                        }
-                    }
-                    memo[i][j] = tmp1 || tmp2;
+        if (memo[i] != 0) {
+            return (memo[i] == 1) ? true : false;
+        }
+        // 以包大小为for循环，dfs的思路是当前有n-i种分割方法，这个结点处有n-i
+        // 个分支；如果以单词们为for循环，dfs思路是有words.size()个分割方法，
+        // 这个结点又words.size()个分支，这个分枝数小，所有树更长
+        for (int j = i; j < s.length(); j++) {
+            if (words.contains(s.substring(i, j + 1)) && dfs(j + 1, words, s)) {
+                memo[j] = 1;
+                return true;
+            }
+        }
+        memo[i] = -1;
+        return false;
+
+    }
+
+    boolean dfs(int i, List<String> words, String s) {
+        // 退出递归的条件
+        if (i == s.length()) {
+
+            return true;
+        }
+        // 使用记录信息的地方
+        if (memo[i] != 0) {
+            return (memo[i] == 1) ? true : false;
+        }
+        // 用for循环遍历子节点的情况
+        for (int j = i; j < s.length(); j++) {
+            if (words.contains(s.substring(i, j + 1))) {
+                // 子节点进行递归
+
+                if (dfs(j + 1, words, s)) {
+                    // 子节点返回的地方，可以根据返回值记录信息
+                    memo[j] = 1;
+                    return true;
                 }
             }
         }
-        // for(int i=1;i<=s.length();i++){
-        // for(int j=1;j<=wordDict.size();j++){
-        // System.out.print(memo[i][j]+" ");
-        // }
-        // System.out.println();
-        // }
+        memo[i] = -1;
+        return false;// 最后返回不满足的情况
 
-        // 同理最后输出的时候也要在所以wordDict之间进行可行性判断
-        boolean ret = false;
-        for (int k = 0; k < wordDict.size(); k++) {
-            if (memo[s.length()][k + 1]) {
-                ret = true;
-                break;
-            }
-        }
-        return ret;
-    }
-
-    public void dfs2(String s, int index, List<String> wordDict, ArrayList<Integer> st) {
-        if (index == 0) {
-            ret = true;
-            return;
-        }
-
-        boolean flag = false;
-        for (int i = 0; i < wordDict.size(); i++) {
-            int startindex = index - wordDict.get(i).length();
-
-            // dp[i]为true表示此路不通，不用走了
-            if (startindex >= 0 && dp[startindex] == false
-                    && (s.substring(startindex, index)).equals(wordDict.get(i))) {
-                // 记录
-                st.add(st.size(), startindex);
-                dfs2(s, startindex, wordDict, st);
-                flag = true;
-            }
-            // 一旦ret已经为true，表示已经找到了一条路，可以立即返回
-            if (ret)
-                return;
-        }
-        if (!flag) {
-            // 表示此路不通
-            for (int i = 0; i < st.size(); i++) {
-                dp[st.get(i)] = true;
-            }
-            st.clear();
-        }
-    }
-
-    public boolean wordBreak2(String s, List<String> wordDict) {
-        // 自顶向下超时，改为自底向上
-        dp = new boolean[s.length()];
-        // arraylist要用Integer而不能用int
-        ArrayList<Integer> st = new ArrayList<Integer>();
-        dfs2(s, s.length(), wordDict, st);
-        return ret;
-    }
-
-    public void dfs1(String s, int index, List<String> wordDict) {
-
-        // dfs感觉最好不要有返回值
-        if (index >= s.length()) {
-            ret = true;
-            return;
-        }
-        for (int i = 0; i < wordDict.size(); i++) {
-            int endindex = wordDict.get(i).length() + index;
-            if (endindex <= s.length() && (s.substring(index, endindex)).equals(wordDict.get(i))) {
-                dfs1(s, endindex, wordDict);
-            }
-        }
-    }
-
-    public boolean wordBreak1(String s, List<String> wordDict) {
-        // 自顶向下超时，而且不好保存中间结果
-        dfs1(s, 0, wordDict);
-        return ret;
     }
 }
 // @lc code=end
