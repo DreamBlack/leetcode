@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,38 +66,86 @@ import java.util.Map;
  * Output:
  * []
  * 
+ * 解题思路：
+ * 1、dfs+memo
+ * dfs返回解空间中所有可能的句子。map记录每个string，可以被分解为单词表中的哪些
+ * 单词。
+ * 2、dp+dfs
+ * 先用dp，后在dp的表里进行dfs。那么在dp的时候势必要记下可以到达当前点的路径
  */
 
 // @lc code=start
 class Solution {
-    Map<String,LinkedList<String>>map;
     public List<String> wordBreak(String s, List<String> wordDict) {
-        map=new HashMap<String,LinkedList<String>>();
-        return dfs(s,wordDict);
-    }
-    List<String> dfs(String s,List<String>words){
-        LinkedList<String> res=new LinkedList<>();
-        //退出语句
-        if(s.length()==0){
-            res.add("");//这里必须加一个元素再返回，否则for(String t:tmp){这里根本不会执行，因为是empty(),但不是Null
+        List<Integer>[] starts = new List[s.length() + 1];
+        starts[0] = new ArrayList<Integer>();
+        for (int i = 1; i <= s.length(); i++) {
+            for (String word : wordDict) {
+                int wordLen = word.length();
+
+                if (wordLen <= i && word.equals(s.substring(i - wordLen, i))) {
+                    if (starts[i - wordLen] == null) {
+                        continue;// 这句话不能少，因为要想starts[i].add(i-wordLen);
+                        // 这句话执行，则第i-wordLen也必须是可达的
+                    }
+                    if (starts[i] == null) {
+                        starts[i] = new ArrayList<>();
+                    }
+                    starts[i].add(i - wordLen);
+                }
+            }
+            // if(starts[i]!=null){
+            // System.out.println("i="+i+",starts=");
+            // System.out.println(starts[i]);
+            // }
+        }
+        List<String> res = new ArrayList<>();
+        if (starts[s.length()] == null) {
             return res;
         }
-        if(map.containsKey(s)){
+        dfs(res, "", s, starts, s.length());// 从末尾s.length开始，而不是0
+        return res;
+    }
+
+    private void dfs(List<String> res, String path, String s, List<Integer>[] starts, int end) {
+        if (end == 0) {
+            res.add(path.substring(1));
+        }
+        for (Integer start : starts[end]) {
+            String word = s.substring(start, end);
+            dfs(res, " " + word + path, s, starts, start);
+        }
+    }
+
+    Map<String, LinkedList<String>> map;
+
+    public List<String> wordBreak1(String s, List<String> wordDict) {
+        map = new HashMap<String, LinkedList<String>>();
+        return dfs1(s, wordDict);
+    }
+
+    List<String> dfs1(String s, List<String> words) {
+        LinkedList<String> res = new LinkedList<>();
+        // 退出语句
+        if (s.length() == 0) {
+            res.add("");// 这里必须加一个元素再返回，否则for(String t:tmp){这里根本不会执行，因为是empty(),但不是Null
+            return res;
+        }
+        if (map.containsKey(s)) {
             return map.get(s);
         }
-        for(int j=0;j<s.length();j++){
-            if(words.contains(s.substring(0, j+1))){
-                List<String>tmp=dfs(s.substring(j+1),words);
-                for(String t:tmp){
-                    res.add(s.substring(0, j+1) + (t==""?"":" ")+t);
+        for (int j = 0; j < s.length(); j++) {
+            if (words.contains(s.substring(0, j + 1))) {
+                List<String> tmp = dfs1(s.substring(j + 1), words);
+                for (String t : tmp) {
+                    res.add(s.substring(0, j + 1) + (t == "" ? "" : " ") + t);
                 }
-               
+
             }
         }
         map.put(s, res);
         return res;
-       
+
     }
 }
 // @lc code=end
-
