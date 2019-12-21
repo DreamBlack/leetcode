@@ -68,6 +68,8 @@ import java.util.Map;
  * 
  * 解题思路：
  * 1、dfs+memo
+ * 这题其实也可以用不带返回值的dfs解决的如3
+ * 
  * dfs返回解空间中所有可能的句子。map记录每个string，可以被分解为单词表中的哪些
  * 单词。
  * 2、dp+dfs
@@ -76,7 +78,7 @@ import java.util.Map;
 
 // @lc code=start
 class Solution {
-    public List<String> wordBreak(String s, List<String> wordDict) {
+    public List<String> wordBreak2(String s, List<String> wordDict) {
         List<Integer>[] starts = new List[s.length() + 1];
         starts[0] = new ArrayList<Integer>();
         for (int i = 1; i <= s.length(); i++) {
@@ -117,13 +119,36 @@ class Solution {
         }
     }
 
+   
+    public List<String> wordBreak3(String s, List<String> wordDict) {
+        List<String> res=new ArrayList<>();
+        String list="";
+        dfs3(s, wordDict,res,list);
+        return res;
+    }
+    void dfs3(String s, List<String> words,List<String>res,String list) {
+        // 退出语句
+        if (s.length() == 0) {
+            res.add(list.substring(1));// 这里必须加一个元素再返回，否则for(String t:tmp){这里根本不会执行，因为是empty(),但不是Null
+            return;
+        }
+        
+        for (int j = 0; j < s.length(); j++) {
+            if (words.contains(s.substring(0, j + 1))) {
+                list=list+" "+s.substring(0, j + 1);
+                dfs3(s.substring(j + 1), words,res,list);
+                list=list.substring(0,list.length()-j-2);
+
+            }
+        }
+
+    }
     Map<String, LinkedList<String>> map;
 
-    public List<String> wordBreak1(String s, List<String> wordDict) {
+    public List<String> wordBreak(String s, List<String> wordDict) {
         map = new HashMap<String, LinkedList<String>>();
         return dfs1(s, wordDict);
     }
-
     List<String> dfs1(String s, List<String> words) {
         LinkedList<String> res = new LinkedList<>();
         // 退出语句
