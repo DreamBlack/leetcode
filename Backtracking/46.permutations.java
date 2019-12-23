@@ -43,6 +43,9 @@ import java.util.List;
  * 3、终结点是什么？
  * 答：path中有了n个数
  * 
+ * 4、时间复杂度
+ * 用visited数组，下届为O(N*N!)
+ * 用set，下届为O(N!)上届为O(N*N!)
  * 注意点：
  * 需要记下标记和取消标记；
  * void backTracking(boolean[]visited,int[]nums,int pos,List<List<Integer>>res,List<Integer>path)
