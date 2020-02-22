@@ -99,54 +99,113 @@ import java.util.Map;
 
 // @lc code=start
 class Solution {
+    /**
+     * 网友解法，思路非常清晰，总整体来考虑，而不是逐个字符去考虑
+     * 
+     * @param s
+     * @return
+     */
     public int romanToInt(String s) {
-        int result=0;
-        if(s==null){
+        int sum = 0;
+        if (s.indexOf("IV") != -1) {
+            sum -= 2;
+        }
+        if (s.indexOf("IX") != -1) {
+            sum -= 2;
+        }
+        if (s.indexOf("XL") != -1) {
+            sum -= 20;
+        }
+        if (s.indexOf("XC") != -1) {
+            sum -= 20;
+        }
+        if (s.indexOf("CD") != -1) {
+            sum -= 200;
+        }
+        if (s.indexOf("CM") != -1) {
+            sum -= 200;
+        }
+
+        char c[] = s.toCharArray();
+        int count = 0;
+
+        for (; count <= s.length() - 1; count++) {
+            if (c[count] == 'M')
+                sum += 1000;
+            if (c[count] == 'D')
+                sum += 500;
+            if (c[count] == 'C')
+                sum += 100;
+            if (c[count] == 'L')
+                sum += 50;
+            if (c[count] == 'X')
+                sum += 10;
+            if (c[count] == 'V')
+                sum += 5;
+            if (c[count] == 'I')
+                sum += 1;
+
+        }
+
+        return sum;
+
+    }
+
+    /**
+     * 我的解法，写的比较长
+     * 
+     * @param s
+     * @return
+     */
+    public int romanToIntMy(String s) {
+        int result = 0;
+        if (s == null) {
             return 0;
         }
-        Map<Character,Integer> table=new HashMap<Character,Integer> (){{
-            this.put('I', 1);
-            this.put('V', 5);
-            this.put('X', 10);
-            this.put('L', 50);
-            this.put('C', 100);
-            this.put('D', 500);
-            this.put('M', 1000);
-        }};
-        for(int i=0;i<s.length();i++){
-            char c=s.charAt(i);
-            switch(c){
-                case 'I':{
-                    if(i<s.length()-1&&(s.charAt(i+1)=='V'||s.charAt(i+1)=='X')){
-                        result-=1;
-                    }else{
-                        result+=1;
-                    }
-                    break;
+        Map<Character, Integer> table = new HashMap<Character, Integer>() {
+            {
+                this.put('I', 1);
+                this.put('V', 5);
+                this.put('X', 10);
+                this.put('L', 50);
+                this.put('C', 100);
+                this.put('D', 500);
+                this.put('M', 1000);
+            }
+        };
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            switch (c) {
+            case 'I': {
+                if (i < s.length() - 1 && (s.charAt(i + 1) == 'V' || s.charAt(i + 1) == 'X')) {
+                    result -= 1;
+                } else {
+                    result += 1;
                 }
-                case 'X':{
-                    if(i<s.length()-1&&(s.charAt(i+1)=='L'||s.charAt(i+1)=='C')){
-                        result-=10;
-                    }else{
-                        result+=10;
-                    }
-                    break;
+                break;
+            }
+            case 'X': {
+                if (i < s.length() - 1 && (s.charAt(i + 1) == 'L' || s.charAt(i + 1) == 'C')) {
+                    result -= 10;
+                } else {
+                    result += 10;
                 }
-                case 'C':{
-                    if(i<s.length()-1&&(s.charAt(i+1)=='D'||s.charAt(i+1)=='M')){
-                        result-=100;
-                    }else{
-                        result+=100;
-                    }
-                    break;
+                break;
+            }
+            case 'C': {
+                if (i < s.length() - 1 && (s.charAt(i + 1) == 'D' || s.charAt(i + 1) == 'M')) {
+                    result -= 100;
+                } else {
+                    result += 100;
                 }
-                default:{
-                    result+=table.get(c);
-                }
+                break;
+            }
+            default: {
+                result += table.get(c);
+            }
             }
         }
         return result;
     }
 }
 // @lc code=end
-
